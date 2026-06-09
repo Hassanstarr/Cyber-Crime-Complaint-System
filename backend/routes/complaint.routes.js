@@ -1,14 +1,13 @@
 /**
  * routes/complaint.routes.js
- * Complaint routes.
- * POST /  is protected by authenticateToken middleware.
- * GET  /  is public (anyone can view complaints).
+ * All complaint routes require authentication.
+ * Users can only see their own complaints.
  */
 
 import { Router } from "express";
 import {
   createComplaint,
-  getAllComplaints,
+  getMyComplaints,
 } from "../controllers/complaint.controller.js";
 import authenticateToken from "../middleware/auth.middleware.js";
 
@@ -17,19 +16,15 @@ const router = Router();
 /**
  * @route  POST /api/complaints
  * @desc   Submit a new complaint
- * @access Private (JWT required)
- * @body   { CategoryID, Title, Description }
+ * @access Private
  */
 router.post("/", authenticateToken, createComplaint);
 
 /**
- * @route  GET /api/complaints
- * @desc   Get all complaints with user and category info
- * @access Public
- * @query  status? (Pending | In Progress | Resolved | Rejected)
- * @query  page?  (default: 1)
- * @query  limit? (default: 20, max: 100)
+ * @route  GET /api/complaints/my
+ * @desc   Get all complaints belonging to the logged-in user
+ * @access Private
  */
-router.get("/", getAllComplaints);
+router.get("/my", authenticateToken, getMyComplaints);
 
 export default router;

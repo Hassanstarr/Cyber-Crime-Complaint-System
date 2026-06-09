@@ -73,7 +73,7 @@ const initDB = async () => {
       // Password is:  admin123  (bcrypt hashed)
       await pool.request().query(`
         INSERT INTO Admins (Username, Password)
-        VALUES ('admin', '$2b$12$KIXiOtGSGCEFbHCBMSAoTONqPFoUGFVgOHhWqfHCfEa6V1xRH1xUu')
+        VALUES ('admin', '$2a$12$2aVgjsVT0R6SgMb3D9f8FeoUkI9u5OzL8mnxtAcweWZ7H/mMb5vmO')
       `);
       console.log("✅  Default admin seeded  →  username: admin  |  password: admin123");
     }

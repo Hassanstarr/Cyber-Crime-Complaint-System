@@ -101,61 +101,53 @@ export const createComplaint = async (req, res) => {
   }
 };
 
-// ── Get All Complaints ─────────────────────────────────────────────────────
+// ── Get MY Complaints (authenticated user sees only their own) ─────────────
 
 /**
- * GET /api/complaints
- * Public route (no auth required).
- * Optional query params: ?status=Pending&page=1&limit=20
- *
- * Returns all complaints with user full name and category name
- * via INNER JOINs. Supports optional status filtering and pagination.
+ * GET /api/complaints/my
+ * Auth: Required
+ * Returns only complaints belonging to the logged-in user (via JWT).
  */
-export const getAllComplaints = async (req, res) => {
-  // Optional filters from query string
+export const getMyComplaints = async (req, res) => {
+  const UserID = req.user.UserID; // from JWT — cannot be faked
+
   const { status, page = 1, limit = 20 } = req.query;
 
-  // Valid statuses matching the DB CHECK constraint
   const validStatuses = ["Pending", "In Progress", "Resolved", "Rejected"];
-
   if (status && !validStatuses.includes(status)) {
     return res.status(400).json({
       success: false,
-      message: `Invalid status filter. Must be one of: ${validStatuses.join(", ")}`,
+      message: `Invalid status. Allowed values: ${validStatuses.join(", ")}`,
     });
   }
 
-  // Ensure page and limit are positive integers
-  const pageNum = Math.max(1, parseInt(page, 10) || 1);
+  const pageNum  = Math.max(1, parseInt(page, 10)  || 1);
   const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
-  const offset = (pageNum - 1) * limitNum;
+  const offset   = (pageNum - 1) * limitNum;
 
   try {
-    const pool = await getPool();
+    const pool    = await getPool();
     const request = pool.request();
 
-    // ── Build query dynamically (still parameterized) ──────────────────────
-    let whereClause = "";
+    request.input("UserID", sql.Int, UserID);
+    request.input("Offset", sql.Int, offset);
+    request.input("Limit",  sql.Int, limitNum);
+
+    let whereClause = "WHERE c.UserID = @UserID";
     if (status) {
       request.input("Status", sql.NVarChar(20), status);
-      whereClause = "WHERE c.Status = @Status";
+      whereClause += " AND c.Status = @Status";
     }
 
-    request.input("Offset", sql.Int, offset);
-    request.input("Limit", sql.Int, limitNum);
-
-    // ── Main SELECT with JOINs ─────────────────────────────────────────────
     const result = await request.query(`
       SELECT
         c.ComplaintID,
-        u.FullName    AS UserFullName,
         cat.CategoryName,
         c.Title,
         c.Description,
         c.Status,
         c.CreatedAt
       FROM Complaints c
-        INNER JOIN Users      u   ON c.UserID     = u.UserID
         INNER JOIN Categories cat ON c.CategoryID = cat.CategoryID
       ${whereClause}
       ORDER BY c.CreatedAt DESC
@@ -163,16 +155,12 @@ export const getAllComplaints = async (req, res) => {
       FETCH NEXT @Limit ROWS ONLY
     `);
 
-    // ── Count total records for pagination meta ────────────────────────────
-    const countRequest = pool.request();
-    if (status) {
-      countRequest.input("Status", sql.NVarChar(20), status);
-    }
-    const countResult = await countRequest.query(`
-      SELECT COUNT(*) AS Total
-      FROM Complaints c
-      ${whereClause}
-    `);
+    const countReq = pool.request().input("UserID", sql.Int, UserID);
+    if (status) countReq.input("Status", sql.NVarChar(20), status);
+
+    const countResult = await countReq.query(
+      `SELECT COUNT(*) AS Total FROM Complaints c ${whereClause}`
+    );
 
     const total = countResult.recordset[0].Total;
 
@@ -181,13 +169,13 @@ export const getAllComplaints = async (req, res) => {
       data: result.recordset,
       pagination: {
         total,
-        page: pageNum,
-        limit: limitNum,
+        page:       pageNum,
+        limit:      limitNum,
         totalPages: Math.ceil(total / limitNum),
       },
     });
   } catch (err) {
-    console.error("getAllComplaints error:", err.message);
+    console.error("getMyComplaints error:", err.message);
     return res.status(500).json({
       success: false,
       message: "Internal server error. Please try again later.",
