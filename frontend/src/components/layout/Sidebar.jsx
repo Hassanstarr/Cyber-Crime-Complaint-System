@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { motion } from 'framer-motion'; // for animation
+import { useTheme } from '../../hooks/useTheme'; // or wherever your theme hook is
 
 /**
  * Sidebar component.
@@ -11,6 +13,7 @@ import { useAuth } from '../../hooks/useAuth';
  */
 export const Sidebar = ({ isOpen, onClose }) => {
   const { logout, user } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
 
   const links = [
     {
@@ -74,9 +77,42 @@ export const Sidebar = ({ isOpen, onClose }) => {
           </NavLink>
         ))}
       </nav>
+      
 
       {/* Action Footer (Sign Out) */}
-      <div className="p-4 border-t border-slate-850">
+      <div className="p-4 border-t border-slate-850 space-y-3">
+
+        {/* Light/Dark Toggle */}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleTheme}
+          className="flex items-center justify-center w-full p-2 
+             text-slate-300 hover:text-white
+             bg-neutral-800 hover:bg-neutral-700
+             rounded-lg transition-colors duration-150"
+          aria-label="Toggle Theme"
+        >
+          <motion.div
+            key={isDark ? 'dark' : 'light'}
+            initial={{ rotate: -45, scale: 0.8, opacity: 0 }}
+            animate={{ rotate: 0, scale: 1, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isDark ? (
+              // Sun Icon
+              <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 2.828a1 1 0 111.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707zm-6.586-.707A1 1 0 003.535 12l-.707.707a1 1 0 011.414 1.414l.707-.707zm0-5.656a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            ) : (
+              // Moon Icon
+              <svg className="w-5 h-5 text-indigo-700" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            )}
+          </motion.div>
+        </motion.button>
+
+        {/* Sign Out */}
         <button
           type="button"
           onClick={() => {

@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../api/axios';
 import Sidebar from '../../components/layout/Sidebar';
+import Navbar from '../../components/layout/Navbar';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
@@ -123,7 +124,7 @@ export const ComplaintDetail = () => {
             </button>
             <span className="font-bold text-sm">Case View</span>
           </div>
-          <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-neutral-850 px-2 py-0.5 rounded">
+          <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
             Operator
           </span>
         </header>
@@ -166,13 +167,13 @@ export const ComplaintDetail = () => {
                 <div className="bg-white dark:bg-neutral-800 p-6 md:p-8 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card">
                   
                   {/* Case Identifiers */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-750 pb-5 mb-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 pb-5 mb-5">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold bg-slate-100 dark:bg-neutral-900 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded">
                         ID: #{complaint.ComplaintID || complaint.id}
                       </span>
                       <span className="text-xs font-semibold text-primary-light dark:text-indigo-400">
-                        {getCategoryName(complaint.CategoryID || complaint.categoryId)}
+                        {complaint.CategoryName || 'Other'}
                       </span>
                     </div>
                     <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
@@ -190,7 +191,7 @@ export const ComplaintDetail = () => {
                     <h3 className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase tracking-wider">
                       Incident Log / Description
                     </h3>
-                    <p className="text-sm text-slate-650 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                       {sanitize(complaint.Description || complaint.description)}
                     </p>
                   </div>
@@ -203,7 +204,7 @@ export const ComplaintDetail = () => {
                 
                 {/* User Info card */}
                 <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card">
-                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-350 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-750 pb-2">
+                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase tracking-wider mb-4 border-b border-slate-100 dark:border-slate-700 pb-2">
                     Reporter Profile
                   </h3>
                   
@@ -212,15 +213,15 @@ export const ComplaintDetail = () => {
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">Full Name</div>
                       <div className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
-                        {complaint.User?.FullName || complaint.user?.fullName || complaint.user?.FullName || 'N/A'}
+                        {complaint.UserFullName || 'N/A'}
                       </div>
                     </div>
 
                     {/* Email */}
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">Email Address</div>
-                      <div className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5 truncate" title={complaint.User?.Email || complaint.user?.email || 'N/A'}>
-                        {complaint.User?.Email || complaint.user?.email || complaint.user?.Email || 'N/A'}
+                      <div className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5 truncate" title={complaint.UserEmail || 'N/A'}>
+                        {complaint.UserEmail || 'N/A'}
                       </div>
                     </div>
 
@@ -228,7 +229,7 @@ export const ComplaintDetail = () => {
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">Phone Number</div>
                       <div className="text-sm font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
-                        {complaint.User?.Phone || complaint.user?.phone || complaint.user?.Phone || 'Not Provided'}
+                        {complaint.UserPhone || 'Not Provided'}
                       </div>
                     </div>
                   </div>
@@ -236,7 +237,7 @@ export const ComplaintDetail = () => {
 
                 {/* Status Triage Panel */}
                 <div className="bg-white dark:bg-neutral-800 p-6 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card space-y-5">
-                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-350 uppercase tracking-wider border-b border-slate-100 dark:border-slate-750 pb-2">
+                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-300 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-2">
                     Triage Controls
                   </h3>
 
@@ -255,7 +256,7 @@ export const ComplaintDetail = () => {
                   </div>
 
                   {/* Status Dropdown / Controls */}
-                  <div className="space-y-4 pt-1 border-t border-slate-100 dark:border-slate-750/30">
+                  <div className="space-y-4 pt-1 border-t border-slate-100 dark:border-slate-700/30">
                     
                     {!isConfirming && !isUpdating && (
                       <div className="space-y-3">
@@ -266,7 +267,7 @@ export const ComplaintDetail = () => {
                           id="newStatus"
                           value={selectedStatus}
                           onChange={handleDropdownChange}
-                          className="w-full bg-slate-50 dark:bg-neutral-900 border border-slate-250 dark:border-slate-700 px-3 py-2 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 outline-none cursor-pointer focus:ring-1 focus:ring-primary-light"
+                          className="w-full bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 outline-none cursor-pointer focus:ring-1 focus:ring-primary-light"
                         >
                           {statuses.map((st) => (
                             <option key={st} value={st}>{st}</option>
@@ -279,7 +280,7 @@ export const ComplaintDetail = () => {
                     {isUpdating && (
                       <div className="flex items-center justify-center gap-2 py-2">
                         <LoadingSpinner size="sm" />
-                        <span className="text-xs font-bold text-slate-550 dark:text-slate-400">Updating system logs...</span>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Updating system logs...</span>
                       </div>
                     )}
 
@@ -290,7 +291,7 @@ export const ComplaintDetail = () => {
                           initial={{ opacity: 0, y: 5 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 5 }}
-                          className="p-3 bg-slate-50 dark:bg-neutral-900 rounded-lg border border-slate-200 dark:border-slate-750 space-y-3"
+                          className="p-3 bg-slate-50 dark:bg-neutral-900 rounded-lg border border-slate-200 dark:border-slate-700 space-y-3"
                         >
                           <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold leading-relaxed">
                             Change status to <span className="font-bold text-primary dark:text-indigo-400">{selectedStatus}</span>?
@@ -299,14 +300,14 @@ export const ComplaintDetail = () => {
                             <button
                               type="button"
                               onClick={handleCancelUpdate}
-                              className="px-2.5 py-1 border border-slate-350 dark:border-slate-650 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded"
+                              className="px-2.5 py-1 border border-slate-300 dark:border-slate-600 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded"
                             >
                               Cancel
                             </button>
                             <button
                               type="button"
                               onClick={handleUpdateStatus}
-                              className="px-2.5 py-1 bg-primary-light hover:bg-indigo-650 text-white font-bold rounded"
+                              className="px-2.5 py-1 bg-primary-light hover:bg-indigo-600 text-white font-bold rounded"
                             >
                               Confirm
                             </button>

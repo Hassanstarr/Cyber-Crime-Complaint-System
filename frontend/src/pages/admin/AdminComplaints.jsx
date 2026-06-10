@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../api/axios';
+import Navbar from '../../components/layout/Navbar';
 import Sidebar from '../../components/layout/Sidebar';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -161,7 +162,7 @@ export const AdminComplaints = () => {
             </button>
             <span className="font-bold text-sm">Admin Portal</span>
           </div>
-          <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-neutral-850 px-2 py-0.5 rounded">
+          <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-neutral-800 px-2 py-0.5 rounded">
             Operator
           </span>
         </header>
@@ -182,7 +183,7 @@ export const AdminComplaints = () => {
             {/* Search inputs */}
             <div className="relative flex-grow max-w-md">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="w-4 h-4 text-slate-400 dark:text-slate-550" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </span>
@@ -194,12 +195,12 @@ export const AdminComplaints = () => {
                   setCurrentPage(1); // Reset page on filter change
                 }}
                 placeholder="Search database by title..."
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-neutral-900 border border-slate-250 dark:border-slate-700 rounded-lg text-sm dark:text-white"
+                className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm dark:text-white"
               />
             </div>
 
             {/* Total Indicators */}
-            <div className="text-xs font-bold text-slate-500 dark:text-slate-450 self-end md:self-auto">
+            <div className="text-xs font-bold text-slate-500 dark:text-slate-400 self-end md:self-auto">
               Total Filtered: {totalItemsCount}
             </div>
           </div>
@@ -248,7 +249,7 @@ export const AdminComplaints = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-550 dark:text-slate-450 uppercase text-[10px] font-bold tracking-wider bg-slate-50/50 dark:bg-neutral-850/20">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-bold tracking-wider bg-slate-50/50 dark:bg-neutral-800/20">
                       <th className="py-3 px-4">ID</th>
                       <th className="py-3 px-4">Reporter</th>
                       <th className="py-3 px-4">Category</th>
@@ -266,15 +267,15 @@ export const AdminComplaints = () => {
                       ))
                     ) : currentItems.length === 0 ? (
                       <tr>
-                        <td colSpan="7" className="py-12 text-center text-slate-450 font-semibold">
+                        <td colSpan="7" className="py-12 text-center text-slate-400 font-semibold">
                           No matching complaints found.
                         </td>
                       </tr>
                     ) : (
                       currentItems.map((comp) => {
                         const cId = comp.ComplaintID || comp.id;
-                        const cUser = comp.User?.FullName || comp.user?.fullName || comp.user?.FullName || 'Anonymous';
-                        const categoryId = comp.CategoryID || comp.categoryId;
+                        const cUser = comp.UserFullName || 'Anonymous';
+                        const cCategory = comp.CategoryName || 'Other';
                         const cTitle = sanitize(comp.Title || comp.title);
                         const cStatus = comp.Status || comp.status || 'Pending';
                         const cDate = comp.CreatedAt || comp.createdAt;
@@ -285,25 +286,25 @@ export const AdminComplaints = () => {
                         return (
                           <tr
                             key={cId}
-                            className="border-b border-slate-100 dark:border-slate-800/40 hover:bg-slate-50/50 dark:hover:bg-neutral-850/20 transition-colors duration-150"
+                            className="border-b border-slate-100 dark:border-slate-800/40 hover:bg-slate-50/50 dark:hover:bg-neutral-800/20 transition-colors duration-150"
                           >
                             {/* Case ID */}
-                            <td className="py-4 px-4 font-mono text-xs font-bold text-slate-500 dark:text-slate-450">
+                            <td className="py-4 px-4 font-mono text-xs font-bold text-slate-500 dark:text-slate-400">
                               #{cId}
                             </td>
 
                             {/* User name */}
-                            <td className="py-4 px-4 font-semibold text-slate-850 dark:text-slate-200 truncate max-w-[130px]">
+                            <td className="py-4 px-4 font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[130px]">
                               {cUser}
                             </td>
 
                             {/* Category */}
-                            <td className="py-4 px-4 text-slate-650 dark:text-slate-350">
-                              {getCategoryName(categoryId)}
+                            <td className="py-4 px-4 text-slate-600 dark:text-slate-300">
+                              {cCategory}
                             </td>
 
                             {/* Title */}
-                            <td className="py-4 px-4 font-semibold text-slate-800 dark:text-slate-250 truncate max-w-[200px]" title={cTitle}>
+                            <td className="py-4 px-4 font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[200px]" title={cTitle}>
                               {cTitle}
                             </td>
 
@@ -320,7 +321,7 @@ export const AdminComplaints = () => {
                                       value={cStatus}
                                       onChange={(e) => handleStatusChange(cId, e.target.value)}
                                       disabled={isUpdating}
-                                      className="bg-slate-100 hover:bg-slate-200 dark:bg-neutral-900 dark:hover:bg-neutral-850 border border-slate-250 dark:border-slate-700 py-1 pl-2 pr-6 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-250 focus:ring-1 focus:ring-primary-light transition-all outline-none cursor-pointer"
+                                      className="bg-slate-100 hover:bg-slate-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 border border-slate-200 dark:border-slate-700 py-1 pl-2 pr-6 rounded-lg text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-primary-light transition-all outline-none cursor-pointer"
                                     >
                                       {statuses.map((st) => (
                                         <option key={st} value={st}>{st}</option>
@@ -332,7 +333,7 @@ export const AdminComplaints = () => {
                             </td>
 
                             {/* Date */}
-                            <td className="py-4 px-4 text-slate-500 dark:text-slate-450 whitespace-nowrap">
+                            <td className="py-4 px-4 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                               {formatDate(cDate)}
                             </td>
 

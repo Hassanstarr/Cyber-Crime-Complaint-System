@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../../api/axios';
 import Sidebar from '../../components/layout/Sidebar';
+import Navbar from '../../components/layout/Navbar';
 import StatusBadge from '../../components/common/StatusBadge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
@@ -127,6 +128,7 @@ export const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 flex transition-colors duration-200">
+
       
       {/* Collapsible Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
@@ -167,7 +169,7 @@ export const AdminDashboard = () => {
             </div>
             <button
               onClick={fetchDashboardData}
-              className="p-2.5 bg-white border border-slate-250 dark:bg-neutral-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-neutral-700/50 rounded-lg shadow-xs transition-colors duration-150"
+              className="p-2.5 bg-white border border-slate-200 dark:bg-neutral-800 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-neutral-700/50 rounded-lg shadow-xs transition-colors duration-150"
               aria-label="Reload dashboard data"
             >
               <svg className="w-4.5 h-4.5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +207,7 @@ export const AdminDashboard = () => {
                   variants={itemVariants}
                   className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card"
                 >
-                  <span className="text-[11px] font-bold text-slate-550 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     Total
                   </span>
                   <div className="text-2xl font-bold text-primary dark:text-white mt-1.5 font-mono">
@@ -218,11 +220,11 @@ export const AdminDashboard = () => {
                   variants={itemVariants}
                   className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card"
                 >
-                  <span className="text-[11px] font-bold text-slate-550 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                     Pending
                   </span>
-                  <div className="text-2xl font-bold text-amber-555 dark:text-amber-400 mt-1.5 font-mono">
+                  <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1.5 font-mono">
                     <CountUp to={stats.pending} />
                   </div>
                 </motion.div>
@@ -232,7 +234,7 @@ export const AdminDashboard = () => {
                   variants={itemVariants}
                   className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card"
                 >
-                  <span className="text-[11px] font-bold text-slate-550 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                     In Progress
                   </span>
@@ -246,11 +248,11 @@ export const AdminDashboard = () => {
                   variants={itemVariants}
                   className="bg-white dark:bg-neutral-800 p-5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-card"
                 >
-                  <span className="text-[11px] font-bold text-slate-550 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     Resolved
                   </span>
-                  <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-450 mt-1.5 font-mono">
+                  <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 mt-1.5 font-mono">
                     <CountUp to={stats.resolved} />
                   </div>
                 </motion.div>
@@ -269,7 +271,7 @@ export const AdminDashboard = () => {
                   </h3>
                   
                   {stats.total === 0 ? (
-                    <div className="py-8 text-center text-sm text-slate-450">
+                    <div className="py-8 text-center text-sm text-slate-400">
                       No status data to render.
                     </div>
                   ) : (
@@ -339,14 +341,14 @@ export const AdminDashboard = () => {
                   </div>
 
                   {complaints.length === 0 ? (
-                    <div className="py-8 text-center text-sm text-slate-450">
+                    <div className="py-8 text-center text-sm text-slate-400">
                       No complaints registered in system.
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse text-sm">
                         <thead>
-                          <tr className="border-b border-slate-100 dark:border-slate-700/50 text-slate-450 uppercase text-[11px] font-bold tracking-wider">
+                          <tr className="border-b border-slate-100 dark:border-slate-700/50 text-slate-400 uppercase text-[11px] font-bold tracking-wider">
                             <th className="pb-3 pr-2">Case ID</th>
                             <th className="pb-3 pr-2">User</th>
                             <th className="pb-3 pr-2">Category</th>
@@ -358,15 +360,15 @@ export const AdminDashboard = () => {
                         <tbody>
                           {complaints.slice(0, 10).map((comp) => {
                             const cId = comp.ComplaintID || comp.id;
-                            const cUser = comp.User?.FullName || comp.user?.fullName || comp.user?.FullName || 'Anonymous';
-                            const categoryId = comp.CategoryID || comp.categoryId;
+                            const cUser = comp.UserFullName || 'Anonymous';
+                            const cCategory = comp.CategoryName || 'Other';
                             const cStatus = comp.Status || comp.status || 'Pending';
                             const cDate = comp.CreatedAt || comp.createdAt;
 
                             return (
                               <tr
                                 key={cId}
-                                className="border-b border-slate-100/50 dark:border-slate-750/30 last:border-0 hover:bg-slate-50/50 dark:hover:bg-neutral-850/30 transition-all duration-150"
+                                className="border-b border-slate-100/50 dark:border-slate-700/30 last:border-0 hover:bg-slate-50/50 dark:hover:bg-neutral-800/30 transition-all duration-150"
                               >
                                 <td className="py-3.5 pr-2 font-mono text-xs font-bold text-slate-500 dark:text-slate-400">
                                   #{cId}
@@ -374,19 +376,19 @@ export const AdminDashboard = () => {
                                 <td className="py-3.5 pr-2 font-semibold text-slate-800 dark:text-slate-200 max-w-[120px] truncate">
                                   {cUser}
                                 </td>
-                                <td className="py-3.5 pr-2 text-slate-600 dark:text-slate-350">
-                                  {getCategoryName(categoryId)}
+                                <td className="py-3.5 pr-2 text-slate-600 dark:text-slate-300">
+                                  {cCategory}
                                 </td>
                                 <td className="py-3.5 pr-2">
                                   <StatusBadge status={cStatus} />
                                 </td>
-                                <td className="py-3.5 pr-2 text-slate-500 dark:text-slate-450 whitespace-nowrap">
+                                <td className="py-3.5 pr-2 text-slate-500 dark:text-slate-400 whitespace-nowrap">
                                   {formatDate(cDate)}
                                 </td>
                                 <td className="py-3.5 text-right">
                                   <Link
                                     to={`/admin/complaints/${cId}`}
-                                    className="inline-flex items-center px-2.5 py-1 text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-primary-light hover:text-primary-light dark:text-slate-350 dark:hover:text-white rounded transition-colors duration-150"
+                                    className="inline-flex items-center px-2.5 py-1 text-xs font-bold border border-slate-200 dark:border-slate-700 hover:border-primary-light hover:text-primary-light dark:text-slate-300 dark:hover:text-white rounded transition-colors duration-150"
                                   >
                                     View
                                   </Link>
