@@ -113,23 +113,23 @@ Here are the user interface screens for the Cyber Crime Complaint Management Sys
 
 | Home - Light Mode | Home - Dark Mode |
 | :---: | :---: |
-| ![Home Light](./src/home_light.png) | ![Home Dark](./src/home_dark.png) |
+| ![Home Light](./website_UI/home_light.png) | ![Home Dark](./website_UI/home_dark.png) |
 
 | User Registration | User Login |
 | :---: | :---: |
-| ![Register User](./src/register_user.png) | ![Login User](./src/login_user.png) |
+| ![Register User](./website_UI/register_user.png) | ![Login User](./website_UI/login_user.png) |
 
 | User Dashboard | Admin Dashboard |
 | :---: | :---: |
-| ![User Dashboard](./src/dashboard_user.png) | ![Admin Dashboard](./src/dashboard_admin.png) |
+| ![User Dashboard](./website_UI/dashboard_user.png) | ![Admin Dashboard](./website_UI/dashboard_admin.png) |
 
 | View Complaints | Search Complaints |
 | :---: | :---: |
-| ![User Complaints](./src/user_complaint.png) | ![Search All Complaints](./src/search_all_complaint.png) |
+| ![User Complaints](./website_UI/user_complaint.png) | ![Search All Complaints](./website_UI/search_all_complaint.png) |
 
 | All Complaints (Admin view) |
 | :---: |
-| ![All Complaints](./src/all_complaint.png) |
+| ![All Complaints](./website_UI/all_complaint.png) |
 
 ---
 
