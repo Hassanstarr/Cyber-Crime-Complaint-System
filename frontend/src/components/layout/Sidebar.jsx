@@ -38,13 +38,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-neutral-900 border-r border-slate-800 text-white w-64">
-      {/* Brand Header */}
-      <div className="flex items-center gap-3 px-6 h-16 border-b border-slate-850">
-        <svg className="w-6.5 h-6.5 text-primary-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        <span className="font-bold text-lg tracking-tight">Admin Console</span>
-      </div>
+      {/* Brand Header Removed - Now in Navbar */}
 
       {/* Operator Metadata */}
       <div className="p-5 border-b border-slate-850 flex items-center gap-3.5">
@@ -80,38 +74,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
       
 
       {/* Action Footer (Sign Out) */}
-      <div className="p-4 border-t border-slate-850 space-y-3">
-
-        {/* Light/Dark Toggle */}
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          onClick={toggleTheme}
-          className="flex items-center justify-center w-full p-2 
-             text-slate-300 hover:text-white
-             bg-neutral-800 hover:bg-neutral-700
-             rounded-lg transition-colors duration-150"
-          aria-label="Toggle Theme"
-        >
-          <motion.div
-            key={isDark ? 'dark' : 'light'}
-            initial={{ rotate: -45, scale: 0.8, opacity: 0 }}
-            animate={{ rotate: 0, scale: 1, opacity: 1 }}
-            transition={{ duration: 0.2 }}
-          >
-            {isDark ? (
-              // Sun Icon
-              <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 2.828a1 1 0 111.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707zm-6.586-.707A1 1 0 003.535 12l-.707.707a1 1 0 011.414 1.414l.707-.707zm0-5.656a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
-            ) : (
-              // Moon Icon
-              <svg className="w-5 h-5 text-indigo-700" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            )}
-          </motion.div>
-        </motion.button>
-
+      <div className="p-4 border-t border-slate-850">
         {/* Sign Out */}
         <button
           type="button"
@@ -133,7 +96,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
   return (
     <>
       {/* Desktop Sidebar (lg Screen+) */}
-      <aside className="hidden lg:block fixed inset-y-0 left-0 z-20 w-64 bg-neutral-900 border-r border-slate-850 h-full">
+      <aside className="hidden lg:block fixed top-16 bottom-0 left-0 z-20 w-64 bg-neutral-900 border-r border-slate-850">
         {sidebarContent}
       </aside>
 

@@ -140,13 +140,15 @@ export const AdminComplaints = () => {
   const calculatedTotalPages = Math.max(Math.ceil(totalItemsCount / limitPerPage), 1);
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 flex transition-colors duration-200">
+    <div className="flex flex-col min-h-screen bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 transition-colors duration-200">
+      <Navbar />
       
-      {/* Operator Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <div className="flex flex-1 relative">
+        {/* Operator Sidebar */}
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      {/* Main Admin Area */}
-      <div className="flex-1 lg:pl-64 flex flex-col min-h-screen">
+        {/* Main Admin Area */}
+        <div className="flex-1 lg:pl-64 flex flex-col">
         
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-neutral-900 sticky top-0 z-30">
@@ -368,8 +370,8 @@ export const AdminComplaints = () => {
           )}
 
         </main>
+        </div>
       </div>
-
     </div>
   );
 };
