@@ -108,12 +108,44 @@ VITE_API_BASE_URL=http://localhost:5000
 
 ## Screenshots
 
-*(Add screenshots of your application here)*
+### 🖥️ Frontend UI (Application Screenshots)
+Here are the user interface screens for the Cyber Crime Complaint Management System:
 
-![Landing Page](./screenshots/landing-page.png)
-![Citizen Dashboard](./screenshots/citizen-dashboard.png)
-![Admin Portal](./screenshots/admin-portal.png)
+| Home - Light Mode | Home - Dark Mode |
+| :---: | :---: |
+| ![Home Light](./src/home_light.png) | ![Home Dark](./src/home_dark.png) |
 
+| User Registration | User Login |
+| :---: | :---: |
+| ![Register User](./src/register_user.png) | ![Login User](./src/login_user.png) |
+
+| User Dashboard | Admin Dashboard |
+| :---: | :---: |
+| ![User Dashboard](./src/dashboard_user.png) | ![Admin Dashboard](./src/dashboard_admin.png) |
+
+| View Complaints | Search Complaints |
+| :---: | :---: |
+| ![User Complaints](./src/user_complaint.png) | ![Search All Complaints](./src/search_all_complaint.png) |
+
+| All Complaints (Admin view) |
+| :---: |
+| ![All Complaints](./src/all_complaint.png) |
+
+---
+
+### 🚀 Backend API Testing (Postman Results)
+The backend REST APIs were thoroughly tested using Postman. Below are the successful API endpoint results:
+
+* **Authentication & Authorization**
+  * ![User Registration Test](./postman_result/registerUser.png)
+  * ![User Login Test](./postman_result/login_user.png)
+  * ![Admin Login Test](./postman_result/login_admin.png)
+
+* **Complaint Management & Lifecycle**
+  * ![File a Complaint](./postman_result/complaintPost.png)
+  * ![View My Complaints](./postman_result/complaintMy.png)
+  * ![Fetch Single Complaint (Admin)](./postman_result/SingleCompaint-admin.png)
+  * ![Update Complaint Status (Admin)](./postman_result/updateStatus-admin.png)
 ## Usage
 
 1. Start the **backend** server (`npm run dev` in the `/backend` folder). It will typically run on `http://localhost:5000`.
