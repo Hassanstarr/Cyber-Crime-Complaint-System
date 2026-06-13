@@ -4,12 +4,18 @@ A comprehensive, full-stack web application designed for citizens to securely re
 
 The project separates the client UI and the server-side logic into two distinct layers for better maintainability and scalability.
 
+---
+
 ## Folder Structure
 
 The repository is structured into two main directories:
 
 - `/backend` → handles server-side logic, RESTful APIs, database connections, and authentication.
+
 - `/frontend` → handles the user interface, client-side functionality, routing, and global state management.
+
+
+---
 
 ## Tech Stack
 
@@ -26,13 +32,17 @@ This project is built using the **MERN** stack architecture (using SQL instead o
 **Backend:**
 - Node.js
 - Express.js
-- Microsoft SQL Server (Relational Database via Sequelize/Knex)
+- Microsoft SQL Server (Relational Database)
 - JSON Web Tokens (JWT) for Authentication
 - bcryptjs for password hashing
+- Swagger UI (API Documentation)
+
+---
 
 ## Features
 
-- **Secure Authentication:** Role-based access control (RBAC) with secure JWT handling for Citizens and Admins.
+- **Secure Authentication:** Role-based access control (RBAC) with secure JWT handling for Citizens and Admins. User tokens and Admin tokens are strictly separated — a citizen token cannot access admin routes.
+- **API Documentation:** Interactive Swagger UI available at `/api-docs` to explore and test all endpoints directly from the browser.
 - **Citizen Portal:**
   - File detailed cybercrime complaints securely.
   - Track the real-time status of submitted complaints.
@@ -44,6 +54,8 @@ This project is built using the **MERN** stack architecture (using SQL instead o
 - **Responsive Design:** Beautiful, dynamic, and mobile-friendly UI crafted with Tailwind CSS and Framer Motion.
 - **Dark Mode Support:** Full system-preference aware light and dark mode toggling.
 
+---
+
 ## Installation Instructions
 
 Follow these steps to get the project running on your local machine.
@@ -51,7 +63,8 @@ Follow these steps to get the project running on your local machine.
 ### Prerequisites
 - Node.js (v18 or higher)
 - npm or yarn
-- A running SQL Database instance
+- Microsoft SQL Server (local install)
+- SQL Server Configuration Manager — TCP/IP must be enabled on port 1433
 
 ### 1. Backend Setup
 
@@ -87,18 +100,20 @@ Start the Vite development server:
 npm run dev
 ```
 
-## Environment Variables
+---
 
-To run this project, you will need to add a `.env` file to the root of your `/backend` and `/frontend` directories.
+## Environment Variables
 
 **Backend (`/backend/.env`):**
 ```env
 PORT=5000
-DB_HOST=localhost
-DB_USER=root
+DB_SERVER=localhost
+DB_PORT=1433
+DB_DATABASE=CyberCrimeDB
+DB_USER=sa
 DB_PASSWORD=your_db_password
-DB_NAME=cyber_crime_db
 JWT_SECRET=your_super_secret_jwt_key
+JWT_EXPIRES_IN=7d
 ```
 
 **Frontend (`/frontend/.env`):**
@@ -106,11 +121,51 @@ JWT_SECRET=your_super_secret_jwt_key
 VITE_API_BASE_URL=http://localhost:5000
 ```
 
+---
+
+## API Documentation (Swagger UI)
+
+This project includes interactive API documentation powered by **Swagger UI**.
+
+Once the backend server is running, open your browser and navigate to:
+
+```
+http://localhost:5000/api-docs
+```
+
+You will see a full list of all available endpoints, request bodies, response schemas, and status codes — all testable directly from the browser.
+
+### How to authenticate in Swagger UI
+
+1. Use `POST /api/users/login` or `POST /api/admin/login` to log in and copy the `token` from the response.
+2. Click the **Authorize 🔒** button at the top right of the Swagger page.
+3. Paste your token and click **Authorize**.
+4. All protected routes will now automatically include your token.
+
+> **Note:** User tokens and Admin tokens are role-restricted. A user token will be rejected with `403 Access denied` on any `/api/admin/*` route, and vice versa.
+
+---
+
+## API Endpoints Reference
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/users/register` | ❌ Public | Register a new citizen account |
+| `POST` | `/api/users/login` | ❌ Public | Citizen login — returns JWT |
+| `POST` | `/api/admin/login` | ❌ Public | Admin login — returns JWT |
+| `POST` | `/api/complaints` | ✅ User JWT | File a new complaint |
+| `GET` | `/api/complaints/my` | ✅ User JWT | Get logged-in user's own complaints |
+| `GET` | `/api/admin/complaints` | ✅ Admin JWT | Get all complaints (admin view) |
+| `GET` | `/api/admin/complaints/:id` | ✅ Admin JWT | Get single complaint detail |
+| `PUT` | `/api/admin/update-status/:id` | ✅ Admin JWT | Update complaint status |
+
+**Valid complaint statuses:** `Pending` → `In Progress` → `Resolved` → `Rejected`
+
+---
+
 ## Screenshots
 
 ### 🖥️ Frontend UI (Application Screenshots)
-Here are the user interface screens for the Cyber Crime Complaint Management System:
-
 | Home - Light Mode | Home - Dark Mode |
 | :---: | :---: |
 | ![Home Light](./website_UI/home_light.png) | ![Home Dark](./website_UI/home_dark.png) |
@@ -133,6 +188,14 @@ Here are the user interface screens for the Cyber Crime Complaint Management Sys
 
 ---
 
+### 📄 API Documentation (Swagger UI)
+
+| Swagger UI |
+| :---: |
+| ![Swagger UI](./website_UI/swagger_overview.png) |
+
+---
+
 ### 🚀 Backend API Testing (Postman Results)
 The backend REST APIs were thoroughly tested using Postman. Below are the successful API endpoint results:
 
@@ -146,12 +209,16 @@ The backend REST APIs were thoroughly tested using Postman. Below are the succes
   * ![View My Complaints](./postman_result/complaintMy.png)
   * ![Fetch Single Complaint (Admin)](./postman_result/SingleCompaint-admin.png)
   * ![Update Complaint Status (Admin)](./postman_result/updateStatus-admin.png)
+
+---
+
 ## Usage
 
-1. Start the **backend** server (`npm run dev` in the `/backend` folder). It will typically run on `http://localhost:5000`.
-2. Start the **frontend** development server (`npm run dev` in the `/frontend` folder). It will typically run on `http://localhost:5173`.
+1. Start the **backend** server (`npm run dev` in the `/backend` folder) — runs on `http://localhost:5000`.
+2. Start the **frontend** development server (`npm run dev` in the `/frontend` folder) — runs on `http://localhost:3000`.
 3. Open your browser and navigate to the frontend URL.
 4. Register a new citizen account or log in with admin credentials to explore the system.
+5. To explore the API interactively, visit `http://localhost:5000/api-docs`.
 
 ## Future Improvements
 
