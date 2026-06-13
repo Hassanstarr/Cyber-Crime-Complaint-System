@@ -1,12 +1,7 @@
 /**
  * routes/admin.routes.js
- * Admin routes for managing complaints.
- *
- * Note: In a production system, admin routes would be protected by
- * a separate admin-auth middleware that checks the `role: 'admin'`
- * field in the JWT. For simplicity, the update-status route here
- * is unprotected at the middleware layer — add authenticateToken
- * (or a dedicated adminAuth middleware) if needed.
+ * All routes that require authentication use authorizeAdmin —
+ * a user JWT will be rejected with 403.
  */
 
 import { Router } from "express";
@@ -16,40 +11,134 @@ import {
   getComplaintById,
   getAllComplaintsAdmin,
 } from "../controllers/admin.controller.js";
-import authenticateToken from "../middleware/auth.middleware.js";
+import { authorizeAdmin } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
 /**
- * @route  POST /api/admin/login
- * @desc   Admin authentication — returns JWT
- * @access Public
- * @body   { Username, Password }
+ * @swagger
+ * /api/admin/login:
+ *   post:
+ *     summary: Login as admin and receive a JWT token
+ *     tags: [Admin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AdminLoginRequest'
+ *     responses:
+ *       200:
+ *         description: Admin login successful
+ *       400:
+ *         description: Missing fields
+ *       401:
+ *         description: Invalid username or password
+ *       500:
+ *         description: Internal server error
  */
 router.post("/login", adminLogin);
 
 /**
- * @route  PUT /api/admin/update-status/:complaintId
- * @desc   Update the status of a complaint
- * @access Public (add authenticateToken to restrict to logged-in admins)
- * @params complaintId — integer
- * @body   { Status: "Pending" | "In Progress" | "Resolved" | "Rejected" }
+ * @swagger
+ * /api/admin/update-status/{complaintId}:
+ *   put:
+ *     summary: Update the status of a complaint (admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: complaintId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateStatusRequest'
+ *     responses:
+ *       200:
+ *         description: Status updated successfully
+ *       400:
+ *         description: Invalid status value or same status
+ *       401:
+ *         description: No token or expired token
+ *       403:
+ *         description: Invalid token or not an admin
+ *       404:
+ *         description: Complaint not found
+ *       500:
+ *         description: Internal server error
  */
-router.put("/update-status/:complaintId", updateComplaintStatus);
+router.put("/update-status/:complaintId", authorizeAdmin, updateComplaintStatus);
 
 /**
- * @route  GET /api/admin/complaints
- * @desc   Get all complaints with full user + category details (admin view)
- * @access Protected
- * @query  status?, page?, limit?
+ * @swagger
+ * /api/admin/complaints:
+ *   get:
+ *     summary: Get all complaints — admin only
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Pending, In Progress, Resolved, Rejected]
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *     responses:
+ *       200:
+ *         description: All complaints with user and category info
+ *       401:
+ *         description: No token or expired token
+ *       403:
+ *         description: Invalid token or not an admin
+ *       500:
+ *         description: Internal server error
  */
-router.get("/complaints", authenticateToken, getAllComplaintsAdmin);
+router.get("/complaints", authorizeAdmin, getAllComplaintsAdmin);
 
 /**
- * @route  GET /api/admin/complaints/:complaintId
- * @desc   Get a single complaint by ID (admin detail view)
- * @access Protected
+ * @swagger
+ * /api/admin/complaints/{complaintId}:
+ *   get:
+ *     summary: Get a single complaint by ID — admin only
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: complaintId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Full complaint detail
+ *       401:
+ *         description: No token or expired token
+ *       403:
+ *         description: Invalid token or not an admin
+ *       404:
+ *         description: Complaint not found
+ *       500:
+ *         description: Internal server error
  */
-router.get("/complaints/:complaintId", authenticateToken, getComplaintById);
+router.get("/complaints/:complaintId", authorizeAdmin, getComplaintById);
 
 export default router;

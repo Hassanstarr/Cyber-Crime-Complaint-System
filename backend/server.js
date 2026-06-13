@@ -9,6 +9,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { getPool } from "./config/db.js";
+import swaggerUi   from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 
 // ── Route imports ──────────────────────────────────────────────────────────
 import userRoutes      from "./routes/user.routes.js";
@@ -31,6 +33,15 @@ app.use(express.json());
 
 // Parse URL-encoded bodies (for form-based clients if needed)
 app.use(express.urlencoded({ extended: true }));
+
+// ── Swagger UI ─────────────────────────────────────────────────────────────
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: "CyberCrime API Docs",
+  swaggerOptions: {
+    persistAuthorization: true,   // keeps your token after page refresh
+  },
+}));
+console.log(`📄  API Docs: http://localhost:${PORT}/api-docs`);
 
 // ── Health-check route ─────────────────────────────────────────────────────
 app.get("/health", (_req, res) => {

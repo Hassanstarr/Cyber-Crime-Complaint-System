@@ -1,7 +1,8 @@
 /**
  * middleware/auth.middleware.js
- * Verifies the JWT bearer token on protected routes.
- * Attaches the decoded payload to `req.user` on success.
+ * Two middlewares:
+ *  - authenticateToken → any valid JWT (users + admins)
+ *  - authorizeAdmin    → JWT must have role: 'admin'
  */
 
 import jwt from "jsonwebtoken";
@@ -9,18 +10,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-/**
- * authenticateToken
- * Express middleware that:
- *  1. Reads the Authorization header  (Bearer <token>)
- *  2. Verifies the token with JWT_SECRET
- *  3. Attaches decoded payload → req.user
- *  4. Calls next() on success, returns 401/403 on failure
- */
+// ── Verify any valid JWT ───────────────────────────────────────────────────
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-
-  // Expect header format:  Authorization: Bearer <token>
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
@@ -32,10 +24,9 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { UserID, iat, exp }
+    req.user = decoded; // { UserID, iat, exp }  OR  { AdminID, role:'admin', iat, exp }
     next();
   } catch (err) {
-    // Distinguish between expired and otherwise invalid tokens
     if (err.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,
@@ -49,4 +40,45 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+// ── Verify JWT AND confirm role is admin ───────────────────────────────────
+const authorizeAdmin = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "Access denied. No token provided.",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // User tokens have UserID but no role field
+    // Admin tokens have AdminID and role: 'admin'
+    if (decoded.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Admin privileges required.",
+      });
+    }
+
+    req.user = decoded;
+    next();
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({
+        success: false,
+        message: "Token has expired. Please log in again.",
+      });
+    }
+    return res.status(403).json({
+      success: false,
+      message: "Invalid token.",
+    });
+  }
+};
+
+export { authenticateToken, authorizeAdmin };
 export default authenticateToken;

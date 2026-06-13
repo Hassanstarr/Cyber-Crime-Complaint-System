@@ -101,15 +101,15 @@ export const Navbar = () => {
               animate={{ rotate: 0, scale: 1, opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              {isDark ? (
-                // Sun Icon
-                <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 2.828a1 1 0 111.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707zm-6.586-.707A1 1 0 003.535 12l-.707.707a1 1 0 011.414 1.414l.707-.707zm0-5.656a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z" clipRule="evenodd" />
-                </svg>
-              ) : (
+              {isDark ? (                
                 // Moon Icon
                 <svg className="w-5 h-5 text-indigo-700" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+              ) : (
+                // Sun Icon
+                <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464-5.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-5.464 2.828a1 1 0 111.414 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707zm-6.586-.707A1 1 0 003.535 12l-.707.707a1 1 0 011.414 1.414l.707-.707zm0-5.656a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z" clipRule="evenodd" />
                 </svg>
               )}
             </motion.div>

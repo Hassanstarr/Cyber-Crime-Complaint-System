@@ -142,7 +142,7 @@ export const getMyComplaints = async (req, res) => {
     const result = await request.query(`
       SELECT
         c.ComplaintID,
-        cat.CategoryName,
+        cat.CategoryID,
         c.Title,
         c.Description,
         c.Status,
